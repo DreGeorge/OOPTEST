@@ -68,23 +68,30 @@ namespace AttendanceTracker
         // PURE LOGIC (later DB check)
         private void BtnLogin_Click(object sender, EventArgs e)
         {
-            string id = txtID.Text;
+            string id = txtID.Text.Trim();
             string password = txtPassword.Text;
 
             if (id == "ID" || password == "Password")
             {
-                MessageBox.Show("Please enter ID and password.", "Login Failed",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter ID and password.");
                 return;
             }
 
-            if (id == "admin" && password == "1234")
-                MessageBox.Show("Login successful!", "Welcome",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            bool valid = UserRepository.ValidateLogin(id, password);
+
+            if (valid)
+            {
+                MessageBox.Show("Login successful!");
+                // TODO: open another form after login
+                // new DashboardForm(id).Show();
+                // this.Hide();
+            }
             else
-                MessageBox.Show("Invalid ID or password.", "Login Failed",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {
+                MessageBox.Show("Invalid ID or password.");
+            }
         }
+
 
         private void LblRegister_Click(object sender, EventArgs e)
         {

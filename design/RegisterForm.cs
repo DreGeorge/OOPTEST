@@ -78,8 +78,51 @@ namespace AttendanceTracker
         // PURE LOGIC (DB validation later)
         private void BtnRegister_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Register logic will be added later.");
+            // basic validation
+            if (txtFirstName.Text == "First Name" || txtLastName.Text == "Last Name" ||
+                txtID.Text == "ID" || txtEmail.Text == "Email" ||
+                txtPassword.Text == "Password" || txtConfirmPassword.Text == "Confirm Password")
+            {
+                MessageBox.Show("Please fill in all required fields.");
+                return;
+            }
+
+            if (txtPassword.Text != txtConfirmPassword.Text)
+            {
+                MessageBox.Show("Passwords do not match.");
+                return;
+            }
+
+            if (UserRepository.UserExists(txtID.Text.Trim()))
+            {
+                MessageBox.Show("ID already exists.");
+                return;
+            }
+
+            User u = new User
+            {
+                UserID = txtID.Text.Trim(),
+                FirstName = txtFirstName.Text.Trim(),
+                LastName = txtLastName.Text.Trim(),
+                ContactNumber = txtContact.Text.Trim(),
+                Address = txtAddress.Text.Trim(),
+                Email = txtEmail.Text.Trim(),
+                PasswordHash = PasswordHelper.Hash(txtPassword.Text)
+            };
+
+            bool ok = UserRepository.Register(u);
+
+            if (ok)
+            {
+                MessageBox.Show("Registered successfully!");
+                this.Close(); // back to login
+            }
+            else
+            {
+                MessageBox.Show("Registration failed.");
+            }
         }
+
 
         private void LblBackToLogin_Click(object sender, EventArgs e)
         {
